@@ -2,7 +2,7 @@
  pageEncoding="UTF-8"%>
 <html>
 <head>
-    <ti, World</title>
+    <titile>Hello World</title>
 </head>
 <body>
     <h1>This is about page.</h1>
