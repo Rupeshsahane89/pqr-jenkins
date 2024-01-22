@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    environment {
+        MAVEN_HOME = 'C:\\Path\\To\\Your\\Maven'
+        JAVA_HOME = 'C:\\Path\\To\\Your\\Java'
+        PATH = "${MAVEN_HOME}\\bin;${JAVA_HOME}\\bin;${env.PATH}"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from your version control system (e.g., Git)
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Set the MAVEN_OPTS environment variable for Maven customization
+                script {
+                    env.MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository'
+                }
+
+                // Build your Java project with Maven
+                bat "${MAVEN_HOME}\\bin\\mvn clean install"
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run tests, if applicable
+                bat "${MAVEN_HOME}\\bin\\mvn test"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build and test successful! Deploying...'
+            // Add deployment steps or notifications here
+        }
+        failure {
+            echo 'Build or test failed! Please check the logs.'
+            // Add notification or cleanup steps here
+        }
+    }
+}
